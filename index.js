@@ -4,8 +4,6 @@ const path = require('path')
 
 const bodyParser = require('body-parser')
 
-
-
 const app = express();
 
 app.engine('html', require('ejs').renderFile);
@@ -14,7 +12,7 @@ app.set('view engine', 'html');
 
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
-app.set('views', path.join(__dirname, '/views'));
+app.set('pages', path.join(__dirname, '/pages'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -22,35 +20,26 @@ app.use(bodyParser.urlencoded({
 }));
 
 
-
-
-let tasks = ['clean my room', 'get high'];
-
 app.get('/',(req,res)=>{
 
-    res.render('index.ejs',{tarefas:tasks});
+if(req.query.busca == null){
+    res.render('../pages/home.ejs',{})
+}else{
+    res.render('../pages/home.ejs',{});
+}
 
-
-});
-
-
-
-app.post("/",(req, res)=>{
-    tasks.push(req.body.task)
-    res.render('index.ejs',{tarefas:tasks});
 })
 
 
-app.get('/deletar/:id',(req,res)=>{
-    tasks = tasks.filter(function(val,index){
-    if(index != req.params.id){
-        return val;
-    }
+
+app.get('/:slug',(req, res)=>{
+    //res.send(req.params.slug)
+    res.render('../pages/single.ejs',{});
+
+
 })
-res.render('index.ejs',{tarefas:tasks});
-});
 
 
-app.listen(3000,()=>{
+app.listen(5000,()=>{
 console.log('Hello, world');
 })
